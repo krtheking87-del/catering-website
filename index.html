@@ -3,396 +3,536 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>For You, Always</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet"/>
+<title>For Her — Side B</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --pink:#f2a7bc;--blush:#fce8ef;--deep:#b5476a;--rose:#e8758f;
-  --cream:#fdf6f0;--sage:#a8c5a0;--lavender:#d4b8e0;--gold:#dba87a;--ink:#3d2532;
+  --bg:#1a1208;
+  --paper:#2b1f0e;
+  --amber:#d4873a;
+  --gold:#e8b96a;
+  --rust:#b84c2a;
+  --cream:#f0e6cc;
+  --tan:#c9a96e;
+  --dim:#7a6040;
+  --red:#c94030;
+  --offwhite:#ede0c4;
 }
 html{scroll-behavior:smooth}
-body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);overflow-x:hidden;cursor:none}
-
-/* cursor */
-#cursor{position:fixed;width:12px;height:12px;background:var(--rose);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:multiply}
-#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--pink);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);mix-blend-mode:multiply}
-.trail-heart{position:fixed;pointer-events:none;z-index:9997;animation:trailFade .8s forwards;transform:translate(-50%,-50%)}
-@keyframes trailFade{0%{opacity:.9;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-200%) scale(.3)}}
-
-#bgCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.5}
-
-.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.25;pointer-events:none;z-index:0;animation:blobMorph 14s ease-in-out infinite alternate}
-.blob1{width:520px;height:520px;background:radial-gradient(circle,#f9c6d5,transparent);top:-120px;left:-160px;animation-delay:0s}
-.blob2{width:440px;height:440px;background:radial-gradient(circle,#c8e6c0,transparent);bottom:-120px;right:-120px;animation-delay:-6s}
-.blob3{width:320px;height:320px;background:radial-gradient(circle,var(--lavender),transparent);top:35%;right:2%;animation-delay:-10s}
-@keyframes blobMorph{
-  0%{border-radius:60% 40% 70% 30%/50% 60% 40% 70%;transform:scale(1) rotate(0deg)}
-  50%{border-radius:30% 70% 40% 60%/60% 30% 70% 40%;transform:scale(1.12) rotate(18deg)}
-  100%{border-radius:50% 50% 60% 40%/40% 70% 30% 60%;transform:scale(.93) rotate(-12deg)}
+body{
+  background:var(--bg);
+  font-family:'Courier Prime',monospace;
+  color:var(--cream);
+  overflow-x:hidden;
+  cursor:none;
 }
 
-section{position:relative;z-index:1}
+/* ── grain overlay ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.055;pointer-events:none;z-index:9000;animation:grainShift 0.12s steps(1) infinite;
+}
+@keyframes grainShift{
+  0%{background-position:0 0}25%{background-position:-30px 20px}50%{background-position:20px -15px}75%{background-position:-10px 30px}
+}
 
-/* hero */
-#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;overflow:hidden}
-.hero-bg-text{position:absolute;font-family:'Playfair Display',serif;font-size:clamp(8rem,22vw,20rem);font-weight:700;color:rgba(242,167,188,.07);line-height:1;pointer-events:none;user-select:none;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;animation:bgDrift 22s ease-in-out infinite alternate}
-@keyframes bgDrift{0%{transform:translate(-50%,-50%) scale(1) rotate(-2deg)}100%{transform:translate(-50%,-52%) scale(1.05) rotate(2deg)}}
-.hero-tag{font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;color:var(--rose);margin-bottom:1.4rem;opacity:0;animation:slideDown .8s .4s forwards}
-@keyframes slideDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,9vw,7.5rem);line-height:1.05;color:var(--deep);font-weight:700}
+/* ── vignette ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.72) 100%);
+  pointer-events:none;z-index:8999;
+}
+
+/* ── custom cursor ── */
+#cur{position:fixed;width:8px;height:8px;background:var(--amber);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen}
+#cur-ring{position:fixed;width:28px;height:28px;border:1px solid var(--amber);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.6;transition:width .2s,height .2s}
+.trail{position:fixed;pointer-events:none;z-index:9997;width:4px;height:4px;border-radius:50%;background:var(--amber);animation:trailDie .6s forwards;transform:translate(-50%,-50%)}
+@keyframes trailDie{0%{opacity:.7;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0)}}
+
+/* ── scanlines ── */
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:8998;
+  background:repeating-linear-gradient(to bottom,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:3rem 2rem;
+  position:relative;overflow:hidden;
+}
+
+/* film sprocket holes */
+.sprocket{position:absolute;top:0;bottom:0;width:44px;display:flex;flex-direction:column;justify-content:space-around;align-items:center;padding:1.5rem 0;opacity:.18}
+.sprocket.left{left:0;border-right:2px solid var(--dim)}
+.sprocket.right{right:0;border-left:2px solid var(--dim)}
+.hole{width:18px;height:24px;border:2px solid var(--dim);border-radius:3px;background:var(--bg)}
+
+/* counter */
+.film-counter{
+  position:absolute;top:2rem;left:50%;transform:translateX(-50%);
+  font-size:.65rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;
+  border:1px solid var(--dim);padding:.3rem .9rem;border-radius:2px;
+  animation:counterFlicker 5s ease-in-out infinite;
+}
+@keyframes counterFlicker{0%,100%{opacity:.5}48%{opacity:.5}50%{opacity:.9}52%{opacity:.5}55%{opacity:.8}57%{opacity:.5}}
+
+.hero-label{
+  font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:2rem;
+  opacity:0;animation:fadeUp .7s .3s forwards;
+}
+
+.hero-title{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(3.5rem,11vw,9rem);
+  line-height:.92;color:var(--cream);
+  text-transform:uppercase;letter-spacing:-.02em;
+}
 .hero-title .line{display:block;overflow:hidden}
-.hero-title .line span{display:block;animation:lineReveal .9s cubic-bezier(.77,0,.175,1) forwards;transform:translateY(110%)}
-.hero-title .line:nth-child(1) span{animation-delay:.5s}
-.hero-title .line:nth-child(2) span{animation-delay:.7s}
-.hero-title .line:nth-child(3) span{animation-delay:.9s}
-@keyframes lineReveal{to{transform:translateY(0)}}
-.hero-title em{font-style:italic;color:var(--gold)}
-.hero-sub{margin-top:2rem;max-width:480px;font-size:1.05rem;font-weight:300;line-height:1.8;opacity:0;animation:fadeUp .9s 1.3s forwards}
-.hero-scroll{margin-top:4rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;opacity:0;animation:fadeUp .8s 1.8s forwards}
-.hero-scroll span{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--pink)}
-.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--pink),transparent);animation:scrollPulse 2s ease-in-out infinite}
-@keyframes scrollPulse{0%,100%{transform:scaleY(1);opacity:.7}50%{transform:scaleY(1.45);opacity:1}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.hero-title .line span{display:block;animation:lineUp 1s cubic-bezier(.77,0,.175,1) forwards;transform:translateY(110%)}
+.hero-title .line:nth-child(1) span{animation-delay:.4s}
+.hero-title .line:nth-child(2) span{animation-delay:.6s;color:var(--amber)}
+.hero-title .line:nth-child(3) span{animation-delay:.8s;font-style:italic;color:var(--gold)}
+@keyframes lineUp{to{transform:translateY(0)}}
 
-/* divider */
-.float-divider{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1rem 0;position:relative;z-index:1}
-.float-divider::before,.float-divider::after{content:'';flex:1;max-width:220px;height:1px;background:linear-gradient(to right,transparent,var(--pink),transparent)}
-.float-divider .d-heart{font-size:1.1rem;animation:heartBeat 1.4s ease-in-out infinite}
-@keyframes heartBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.35)}28%{transform:scale(1)}}
+.hero-date{
+  margin-top:2rem;font-size:.75rem;letter-spacing:.4em;
+  color:var(--dim);text-transform:uppercase;
+  opacity:0;animation:fadeUp .8s 1.2s forwards;
+}
 
-/* reveal */
-.reveal{opacity:0;transform:translateY(40px);transition:opacity .85s cubic-bezier(.23,1,.32,1),transform .85s cubic-bezier(.23,1,.32,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
+.hero-sub{
+  margin-top:1rem;max-width:420px;font-size:.9rem;line-height:1.9;
+  color:var(--tan);opacity:0;animation:fadeUp .8s 1.5s forwards;font-style:italic;
+}
 
-/* typewriter */
-#tw-section{min-height:55vh;display:flex;align-items:center;justify-content:center;padding:5rem 2rem;text-align:center}
-.tw-label{font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sage);margin-bottom:1.5rem;display:block}
-.tw-text{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.6rem,4vw,2.8rem);color:var(--deep);line-height:1.5;min-height:5rem}
-.tw-cursor{display:inline-block;width:2px;height:.9em;background:var(--rose);vertical-align:middle;animation:blink .7s step-end infinite;margin-left:2px}
+/* flicker underline */
+.flicker{animation:textFlicker 8s ease-in-out infinite}
+@keyframes textFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.4}94%{opacity:1}96%{opacity:.6}97%{opacity:1}}
+
+.scroll-film{
+  margin-top:3.5rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  opacity:0;animation:fadeUp .7s 2s forwards;
+}
+.scroll-film span{font-size:.6rem;letter-spacing:.35em;color:var(--dim);text-transform:uppercase}
+.film-strip{display:flex;gap:3px;margin-top:.4rem}
+.film-frame{width:8px;height:14px;border:1px solid var(--dim);border-radius:1px;animation:filmRoll .8s ease-in-out infinite}
+.film-frame:nth-child(1){animation-delay:0s;background:var(--amber);opacity:.6}
+.film-frame:nth-child(2){animation-delay:.15s}
+.film-frame:nth-child(3){animation-delay:.3s}
+.film-frame:nth-child(4){animation-delay:.45s}
+.film-frame:nth-child(5){animation-delay:.6s}
+@keyframes filmRoll{0%,100%{opacity:.25}50%{opacity:.8;background:var(--amber)}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── tape divider ── */
+.tape-div{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem 0;margin:1rem 0;overflow:hidden;
+}
+.tape-div::before,.tape-div::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,transparent,var(--dim),transparent);
+}
+.tape-div .tc{
+  font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--dim);padding:0 1.2rem;
+}
+
+/* ── reveal ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1)}
+.reveal.on{opacity:1;transform:translateY(0)}
+.reveal-l{opacity:0;transform:translateX(-40px);transition:opacity .9s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1)}
+.reveal-l.on{opacity:1;transform:translateX(0)}
+.reveal-r{opacity:0;transform:translateX(40px);transition:opacity .9s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1)}
+.reveal-r.on{opacity:1;transform:translateX(0)}
+
+/* ── POLAROID section ── */
+#polaroids{padding:5rem 2rem 4rem;max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.pol-header{text-align:center;margin-bottom:3.5rem}
+.pol-tag{font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:.8rem}
+.pol-title{font-family:'Abril Fatface',serif;font-size:clamp(2rem,5vw,3.8rem);color:var(--cream);line-height:1.05;text-transform:uppercase}
+.pol-title em{font-style:italic;color:var(--amber);font-family:'Bodoni Moda',serif;text-transform:none}
+
+.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2.5rem}
+
+.pol-card{
+  background:var(--paper);
+  border:1px solid rgba(212,135,58,.15);
+  padding:1.6rem 1.6rem 2.8rem;
+  position:relative;
+  transition:transform .4s cubic-bezier(.23,1,.32,1),box-shadow .4s;
+  box-shadow:4px 6px 24px rgba(0,0,0,.5);
+  cursor:default;
+}
+.pol-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,135,58,.06) 0%,transparent 60%);
+}
+/* random rotations */
+.pol-card:nth-child(1){transform:rotate(-1.5deg)}
+.pol-card:nth-child(2){transform:rotate(1deg)}
+.pol-card:nth-child(3){transform:rotate(-0.8deg)}
+.pol-card:nth-child(4){transform:rotate(1.8deg)}
+.pol-card:nth-child(5){transform:rotate(-1.2deg)}
+.pol-card:hover{transform:rotate(0deg) scale(1.04) translateY(-6px)!important;box-shadow:8px 16px 48px rgba(0,0,0,.7),0 0 40px rgba(212,135,58,.12);z-index:10}
+
+/* photo placeholder — warm grainy rectangle */
+.pol-photo{
+  width:100%;aspect-ratio:1;
+  background:var(--bg);
+  margin-bottom:1.2rem;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.pol-photo::before{
+  content:'';position:absolute;inset:0;
+  animation:photoGrain .1s steps(1) infinite;
+  opacity:.3;
+}
+@keyframes photoGrain{
+  0%{background-position:0 0}33%{background-position:40px -20px}66%{background-position:-20px 30px}
+}
+.pol-num{font-family:'Abril Fatface',serif;font-size:4rem;color:rgba(212,135,58,.15);user-select:none}
+
+.pol-tape{
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  width:60px;height:22px;
+  background:rgba(232,185,106,.18);
+  border:1px solid rgba(232,185,106,.2);
+  backdrop-filter:blur(2px);
+}
+
+.pol-emoji{font-size:1.3rem;margin-bottom:.5rem;display:block;animation:slowWobble 4s ease-in-out infinite}
+.pol-card:nth-child(even) .pol-emoji{animation-direction:reverse;animation-duration:5s}
+@keyframes slowWobble{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+
+.pol-caption{
+  font-family:'Courier Prime',monospace;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.15em;
+  color:var(--amber);margin-bottom:.4rem;font-weight:700;
+}
+.pol-body{font-size:.85rem;line-height:1.75;color:var(--tan);font-style:italic}
+
+/* ── TICKET section ── */
+#ticket-sec{
+  padding:6rem 1.5rem;position:relative;z-index:1;
+  background:linear-gradient(to bottom,transparent,rgba(43,31,14,.8),transparent);
+}
+.ticket-wrap{max-width:680px;margin:0 auto}
+.ticket{
+  background:var(--paper);
+  border:1px solid rgba(212,135,58,.2);
+  border-radius:4px;
+  position:relative;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+/* perforation */
+.ticket::before{
+  content:'';position:absolute;left:0;right:0;top:50%;
+  height:1px;border-top:2px dashed rgba(212,135,58,.2);
+  transform:translateY(-50%);pointer-events:none;
+}
+.ticket-top{padding:2.8rem 3rem 2.2rem}
+.ticket-eyebrow{font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;color:var(--dim);margin-bottom:1.2rem;display:block}
+.ticket-quote{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:clamp(1.4rem,3.5vw,2.2rem);
+  line-height:1.55;color:var(--cream);
+}
+.ticket-stub{
+  padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;
+  border-top:2px dashed rgba(212,135,58,.2);
+}
+.stub-l,.stub-r{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.stub-heart{font-size:1.2rem;animation:heartTick 1s ease-in-out infinite}
+@keyframes heartTick{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+/* typewriter block */
+#tw-sec{padding:5rem 2rem;text-align:center;position:relative;z-index:1}
+.tw-label{font-size:.6rem;letter-spacing:.45em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:1.5rem}
+.tw-out{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:clamp(1.5rem,4vw,2.6rem);
+  color:var(--cream);line-height:1.5;min-height:5rem;
+}
+.tw-cur{display:inline-block;width:2px;height:.85em;background:var(--amber);vertical-align:middle;margin-left:3px;animation:blink .65s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* reasons */
-#reasons{padding:5rem 1.5rem 4rem;max-width:1060px;margin:0 auto}
-.reasons-title{text-align:center}
-.sec-label{font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sage);display:block;margin-bottom:.8rem}
-.sec-title{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(2.2rem,5vw,3.8rem);color:var(--deep);line-height:1.15;margin-bottom:2.5rem}
-.sec-title em{font-style:italic;color:var(--gold)}
-.reasons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.6rem;margin-top:3rem}
-.r-card{background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border:1px solid rgba(242,167,188,.3);border-radius:22px;padding:2rem 1.8rem;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.23,1,.32,1),box-shadow .4s ease,border-color .3s;box-shadow:0 6px 30px rgba(181,71,106,.07);cursor:default}
-.r-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(252,232,239,.7) 0%,rgba(255,255,255,0) 60%);opacity:0;transition:opacity .4s;border-radius:22px}
-.r-card:hover{transform:translateY(-9px) scale(1.02);box-shadow:0 22px 55px rgba(181,71,106,.2);border-color:var(--pink)}
-.r-card:hover::before{opacity:1}
-.r-num{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:700;color:rgba(242,167,188,.3);line-height:1;position:absolute;top:.8rem;right:1.2rem;transition:color .4s}
-.r-card:hover .r-num{color:rgba(242,167,188,.65)}
-.r-emoji{font-size:1.6rem;margin-bottom:.8rem;display:inline-block;animation:emojiWobble 3s ease-in-out infinite}
-.r-card:nth-child(even) .r-emoji{animation-direction:reverse;animation-duration:4s}
-@keyframes emojiWobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-.r-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--deep);margin-bottom:.5rem}
-.r-body{font-size:.9rem;font-weight:300;line-height:1.72;color:var(--ink)}
+/* ── LETTER ── */
+#letter-sec{padding:6rem 1.5rem;position:relative;z-index:1}
+.letter-wrap{
+  max-width:700px;margin:0 auto;
+  background:var(--paper);
+  border:1px solid rgba(212,135,58,.15);
+  padding:3.5rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  position:relative;
+}
+/* corner stamps */
+.letter-wrap::before{
+  content:'✦';position:absolute;top:1rem;left:1.2rem;
+  color:var(--amber);font-size:.9rem;opacity:.4;
+}
+.letter-wrap::after{
+  content:'✦';position:absolute;bottom:1rem;right:1.2rem;
+  color:var(--amber);font-size:.9rem;opacity:.4;
+}
+.letter-to{font-size:.62rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim);margin-bottom:2rem;display:block}
+.letter-p{
+  font-family:'Courier Prime',monospace;
+  font-size:.95rem;line-height:2;color:var(--offwhite);
+  margin-bottom:1.6rem;
+}
+.letter-p span{color:var(--amber)}
+.letter-sig{
+  margin-top:2.5rem;text-align:right;
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1.2rem;color:var(--gold);
+  border-top:1px solid rgba(212,135,58,.2);padding-top:1.2rem;
+}
 
-/* floaty */
-#floaty{min-height:55vh;display:flex;align-items:center;justify-content:center;padding:4rem 1.5rem;position:relative;overflow:hidden}
-.floaty-word{position:absolute;font-family:'Playfair Display',serif;font-style:italic;color:var(--rose);pointer-events:none;user-select:none;animation:floatWord linear infinite;white-space:nowrap}
-@keyframes floatWord{0%{opacity:0;transform:translateY(0) rotate(var(--rot))}10%{opacity:.22}90%{opacity:.22}100%{opacity:0;transform:translateY(-120vh) rotate(calc(var(--rot) + 20deg))}}
-.floaty-center{text-align:center;z-index:1;position:relative}
-.floaty-center h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,5rem);color:var(--deep);font-weight:700;line-height:1.1}
-.floaty-center h2 em{font-style:italic;color:var(--gold)}
-.floaty-center p{margin-top:1.2rem;font-size:1rem;font-weight:300;opacity:.7;max-width:420px;line-height:1.75;margin-left:auto;margin-right:auto}
+/* ── footer ── */
+footer{
+  position:relative;z-index:1;text-align:center;
+  padding:4rem 1.5rem 5rem;
+  border-top:1px solid rgba(212,135,58,.1);
+}
+.footer-logo{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(2.5rem,7vw,5.5rem);
+  color:var(--amber);text-transform:uppercase;
+  letter-spacing:.05em;line-height:1;
+  animation:logoGlow 3s ease-in-out infinite alternate;
+}
+@keyframes logoGlow{from{text-shadow:0 0 20px rgba(212,135,58,.3)}to{text-shadow:0 0 60px rgba(212,135,58,.6),0 0 100px rgba(212,135,58,.2)}}
+.footer-sub{margin-top:1rem;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim)}
 
-/* letter */
-#letter-sec{background:linear-gradient(135deg,rgba(252,232,239,.55),rgba(212,184,224,.2),rgba(168,197,160,.18));padding:7rem 1.5rem;position:relative;overflow:hidden}
-#letter-sec::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23f2a7bc' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
-.letter-inner{max-width:740px;margin:0 auto;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);border:1px solid rgba(242,167,188,.25);border-radius:30px;padding:4rem 3.5rem;box-shadow:0 20px 70px rgba(181,71,106,.13);position:relative;z-index:1}
-.letter-inner::after{content:'"';font-family:'Playfair Display',serif;font-size:14rem;line-height:1;color:rgba(242,167,188,.11);position:absolute;top:-2rem;left:1.5rem;pointer-events:none}
-.letter-p{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,2.2vw,1.25rem);line-height:2;color:var(--ink);position:relative;z-index:1;margin-bottom:1.5rem}
-.letter-sig{text-align:right;font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--deep);border-top:1px solid rgba(242,167,188,.3);padding-top:1.5rem;margin-top:2rem}
-
-/* timeline */
-#timeline-sec{padding:6rem 1.5rem;max-width:700px;margin:0 auto}
-.timeline{position:relative;padding-left:2.5rem;margin-top:2.5rem}
-.timeline::before{content:'';position:absolute;left:.6rem;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--pink) 10%,var(--pink) 90%,transparent)}
-.tl-item{position:relative;margin-bottom:3.5rem}
-.tl-dot{position:absolute;left:-2.5rem;top:.3rem;width:14px;height:14px;border-radius:50%;background:var(--rose);border:3px solid var(--cream);box-shadow:0 0 0 3px var(--pink);animation:dotPulse 2s ease-in-out infinite}
-@keyframes dotPulse{0%,100%{box-shadow:0 0 0 3px var(--pink)}50%{box-shadow:0 0 0 9px rgba(232,117,143,.12)}}
-.tl-emoji{font-size:1.4rem;margin-bottom:.4rem;display:block}
-.tl-heading{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--deep);margin-bottom:.5rem}
-.tl-body{font-size:.92rem;font-weight:300;line-height:1.78;color:var(--ink)}
-
-/* footer */
-footer{position:relative;z-index:1;text-align:center;padding:4rem 1.5rem 5rem;background:linear-gradient(to bottom,transparent,rgba(252,232,239,.45))}
-.footer-heart{font-size:3.5rem;display:inline-block;animation:heartPump 1.2s ease-in-out infinite}
-@keyframes heartPump{0%,100%{transform:scale(1)}15%{transform:scale(1.38)}30%{transform:scale(1)}45%{transform:scale(1.18)}}
-.footer-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);color:var(--deep);margin:1rem 0 .5rem;font-weight:700;line-height:1.2}
-.footer-sub{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rose);opacity:.7;margin-top:1rem}
+/* ── floating film dust ── */
+.dust{position:fixed;width:2px;height:2px;border-radius:50%;background:var(--amber);pointer-events:none;animation:dustFloat linear infinite;opacity:0}
+@keyframes dustFloat{0%{opacity:0;transform:translateY(0) translateX(0)}10%{opacity:.4}90%{opacity:.4}100%{opacity:0;transform:translateY(-100vh) translateX(var(--dx))}}
 </style>
 </head>
 <body>
-<canvas id="bgCanvas"></canvas>
-<div class="blob blob1"></div>
-<div class="blob blob2"></div>
-<div class="blob blob3"></div>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<div class="scanlines"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-bg-text">LOVE</div>
-  <p class="hero-tag">\u2726 a page made just for you \u2726</p>
+  <!-- sprockets -->
+  <div class="sprocket left" id="sp-l"></div>
+  <div class="sprocket right" id="sp-r"></div>
+  <div class="film-counter">SIDE B — 35mm — ♡</div>
+  <p class="hero-label">a film about her</p>
   <h1 class="hero-title">
-    <span class="line"><span>You are the</span></span>
-    <span class="line"><span>best thing that</span></span>
-    <span class="line"><span>ever <em>happened</em> to me.</span></span>
+    <span class="line"><span>She is</span></span>
+    <span class="line"><span>every good</span></span>
+    <span class="line"><span><em>scene.</em></span></span>
   </h1>
+  <p class="hero-date">developed with love · copyright forever</p>
   <p class="hero-sub">
-    I built this little corner of the internet because you deserve to have somewhere that proves it \u2014
-    in writing, in pixels, in every animated petal that falls across the screen.
+    Some people belong in photographs. Some people belong in films.<br/>
+    She belongs in both — and somehow, she chose me.
   </p>
-  <div class="hero-scroll">
-    <span>scroll down</span>
-    <div class="scroll-line"></div>
+  <div class="scroll-film">
+    <span>advance the reel</span>
+    <div class="film-strip">
+      <div class="film-frame"></div>
+      <div class="film-frame"></div>
+      <div class="film-frame"></div>
+      <div class="film-frame"></div>
+      <div class="film-frame"></div>
+    </div>
   </div>
 </section>
 
-<div class="float-divider"><span class="d-heart">\u2661</span></div>
+<div class="tape-div"><span class="tc">✦ roll one ✦</span></div>
+
+<!-- POLAROIDS -->
+<section id="polaroids">
+  <div class="pol-header">
+    <span class="pol-tag reveal">five things on the contact sheet</span>
+    <h2 class="pol-title reveal">Things I love<br/><em>about her</em></h2>
+  </div>
+  <div class="pol-grid" id="pol-grid"></div>
+</section>
+
+<div class="tape-div"><span class="tc">✦ roll two ✦</span></div>
 
 <!-- TYPEWRITER -->
-<section id="tw-section">
-  <div style="max-width:700px;width:100%">
-    <span class="tw-label reveal">words I keep thinking about</span>
-    <div class="tw-text reveal" id="tw-output"><span class="tw-cursor"></span></div>
+<section id="tw-sec">
+  <span class="tw-label reveal">from the director's notes</span>
+  <div class="tw-out reveal" id="tw-out"><span class="tw-cur"></span></div>
+</section>
+
+<div class="tape-div"><span class="tc">✦ roll three ✦</span></div>
+
+<!-- TICKET -->
+<section id="ticket-sec">
+  <div class="ticket-wrap">
+    <div class="ticket reveal">
+      <div class="ticket-top">
+        <span class="ticket-eyebrow">admission — one heart, no refunds</span>
+        <p class="ticket-quote">
+          "The thing about her is that she does not even try to be extraordinary.
+          She just is — naturally, effortlessly, completely."
+        </p>
+      </div>
+      <div class="ticket-stub">
+        <span class="stub-l">Keep this stub</span>
+        <span class="stub-heart">♡</span>
+        <span class="stub-r">Valid: always</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<div class="float-divider"><span class="d-heart">\u2661</span></div>
-
-<!-- REASONS -->
-<section id="reasons">
-  <div class="reasons-title">
-    <span class="sec-label reveal">from my heart to yours</span>
-    <h2 class="sec-title reveal">Reasons I am <em>crazy</em> about you</h2>
-  </div>
-  <div class="reasons-grid" id="reasons-grid"></div>
-</section>
-
-<div class="float-divider"><span class="d-heart">\u2661</span></div>
-
-<!-- FLOATING WORDS -->
-<section id="floaty">
-  <div class="floaty-center reveal">
-    <h2>Every single day with you<br/>is a <em>gift</em> I did not earn.</h2>
-    <p>I am so lucky it is almost unfair to everyone else in the world.</p>
-  </div>
-</section>
-
-<div class="float-divider"><span class="d-heart">\u2661</span></div>
+<div class="tape-div"><span class="tc">✦ end credits ✦</span></div>
 
 <!-- LETTER -->
 <section id="letter-sec">
-  <div class="letter-inner">
-    <span class="sec-label reveal" style="margin-bottom:1.8rem;display:block">a letter \u2014 from me, to you</span>
+  <div class="letter-wrap">
+    <span class="letter-to reveal">to: her · from: me · re: everything</span>
     <p class="letter-p reveal">
-      I never thought I would be the type of person to build a website for someone. And yet here I am,
-      writing code at some ungodly hour because no text message felt big enough, no card felt permanent enough,
-      and I needed you to have something you could return to \u2014 on the hard days, on the ordinary days,
-      on any day you need a reminder that you are deeply, completely loved.
+      There is this thing that happens when she walks into a room. It is not loud.
+      Nobody announces it. But the air shifts slightly — <span>warmer</span>, somehow —
+      and I notice it every single time, even after all this time.
     </p>
-    <p class="letter-p reveal" style="transition-delay:.15s">
-      You are the kind of person who makes everything feel softer. The noise of the world quiets down a little
-      when you are around. I did not know that was possible until I met you, and now I genuinely cannot imagine
-      going back to the version of life that did not have you in it. That version feels like a rough draft.
+    <p class="letter-p reveal" style="transition-delay:.12s">
+      I think about the way she smells — not perfume exactly, just <span>her</span>,
+      whatever that is — and how it is the most comforting thing I have ever known.
+      I think about her eyes when she smiles. They do this thing where they go first,
+      just a half-second before the rest of her face catches up. I live for that half-second.
     </p>
-    <p class="letter-p reveal" style="transition-delay:.3s">
-      I love you for all the obvious reasons and for a thousand tiny ones I can never fully put into words \u2014
-      the way you laugh at your own jokes before you finish them, the way you notice things other people walk past,
-      the way you make ordinary Tuesday evenings feel like something worth remembering forever.
+    <p class="letter-p reveal" style="transition-delay:.24s">
+      She has these little nicknames for me and she uses them like they are nothing,
+      like they did not quietly rearrange something in my chest the first time she said them.
+      She makes me feel <span>understood</span> — not in the way people say they understand you,
+      but in the way that means she actually listens. She actually sees me.
     </p>
-    <p class="letter-p reveal" style="transition-delay:.45s">
-      So this is me doing the most embarrassingly earnest thing I know how to do: telling you the truth.
-      You are my favourite person. Full stop. No asterisk. No fine print. Just you \u2014 exactly as you are \u2014
-      and me, grateful every single day that you chose me back.
+    <p class="letter-p reveal" style="transition-delay:.36s">
+      And the way she eats food she loves. I cannot explain it. She just gets this look —
+      fully present, no performance, just honest joy — and I think it is one of the most
+      beautiful things I have ever seen in my entire life. She does not even know she does it.
     </p>
-    <div class="letter-sig reveal" style="transition-delay:.6s">\u2014 yours, completely &amp; always \ud83c\udf38</div>
-  </div>
-</section>
-
-<div class="float-divider"><span class="d-heart">\u2661</span></div>
-
-<!-- TIMELINE -->
-<section id="timeline-sec">
-  <span class="sec-label reveal">the story so far</span>
-  <h2 class="sec-title reveal">A few <em>favourite</em> chapters</h2>
-  <div class="timeline">
-    <div class="tl-item reveal">
-      <div class="tl-dot"></div>
-      <span class="tl-emoji">✨</span>
-      <div class="tl-heading">The moment I knew</div>
-      <p class="tl-body">It was not one dramatic instant — it was a slow, undeniable accumulation of small moments that added up to: yes, this person. Definitely this person. Without any doubt at all.</p>
-    </div>
-    <div class="tl-item reveal" style="transition-delay:.1s">
-      <div class="tl-dot"></div>
-      <span class="tl-emoji">😂</span>
-      <div class="tl-heading">Every time you made me laugh until it hurt</div>
-      <p class="tl-body">There have been so many. Each one feels like a small treasure I have stored somewhere safe — the kind of memory I reach for on hard days just to remind myself how good life actually is.</p>
-    </div>
-    <div class="tl-item reveal" style="transition-delay:.2s">
-      <div class="tl-dot"></div>
-      <span class="tl-emoji">🌙</span>
-      <div class="tl-heading">The quiet evenings</div>
-      <p class="tl-body">Some of my absolute favourite times are not anything spectacular. Just being near you, existing in the same room, talking about nothing in particular — which somehow always feels like everything.</p>
-    </div>
-    <div class="tl-item reveal" style="transition-delay:.3s">
-      <div class="tl-dot"></div>
-      <span class="tl-emoji">🌱</span>
-      <div class="tl-heading">Every time you were quietly kind</div>
-      <p class="tl-body">You are kind in the uncelebrated, effortless ways — to strangers, to animals, to people who have nothing to offer you in return. That kind of character is the rarest thing I have ever seen.</p>
-    </div>
-    <div class="tl-item reveal" style="transition-delay:.4s">
-      <div class="tl-dot"></div>
-      <span class="tl-emoji">🌸</span>
-      <div class="tl-heading">Right now — and everything still ahead</div>
-      <p class="tl-body">This is my favourite chapter yet. Not because it is perfect, but because you are in it. And as long as that is true, I think we are going to be just fine.</p>
-    </div>
+    <p class="letter-p reveal" style="transition-delay:.48s">
+      I do not know what I did to deserve any of this. I just know I am <span>not letting go.</span>
+    </p>
+    <div class="letter-sig reveal" style="transition-delay:.6s">— yours, on every frame of film 🎞️</div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-heart">💗</div>
-  <div class="footer-title reveal">I love you.<br/>That's it. That's the whole page.</div>
-  <p class="footer-sub reveal" style="transition-delay:.2s">made with an embarrassing amount of love</p>
+  <div class="footer-logo reveal flicker">Side B</div>
+  <p class="footer-sub reveal" style="transition-delay:.2s">shot on location · in her presence · with love</p>
 </footer>
 
 <script>
-// ── Custom cursor
-const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+// ── cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{
   mx=e.clientX;my=e.clientY;
   cur.style.left=mx+'px';cur.style.top=my+'px';
 });
-(function animRing(){
-  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
-  ring.style.left=rx+'px';ring.style.top=ry+'px';
-  requestAnimationFrame(animRing);
-})();
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
 
-// ── Cursor trail
-const syms=['♡','❤','✿','❀','♥','🌸','✨'];
-let lastTrail=0;
+// ── trail dots
+let lt=0;
 document.addEventListener('mousemove',e=>{
-  const now=Date.now();if(now-lastTrail<95)return;lastTrail=now;
-  const el=document.createElement('div');el.className='trail-heart';
-  el.textContent=syms[Math.floor(Math.random()*syms.length)];
-  el.style.left=e.clientX+'px';el.style.top=e.clientY+'px';
-  el.style.color=`hsl(${325+Math.random()*50},70%,${60+Math.random()*20}%)`;
-  el.style.fontSize=(.45+Math.random()*.55)+'rem';
-  document.body.appendChild(el);setTimeout(()=>el.remove(),820);
+  const n=Date.now();if(n-lt<40)return;lt=n;
+  const d=document.createElement('div');d.className='trail';
+  d.style.left=e.clientX+'px';d.style.top=e.clientY+'px';
+  d.style.opacity=Math.random()*.5+.2;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),600);
 });
 
-// ── Click burst
+// ── click burst
 document.addEventListener('click',e=>{
-  const burst=['💗','✨','🌸','❀','♡','🌷'];
-  for(let i=0;i<7;i++){
-    const el=document.createElement('div');el.className='trail-heart';
-    el.textContent=burst[Math.floor(Math.random()*burst.length)];
-    const a=Math.random()*360,d=35+Math.random()*65;
-    el.style.left=(e.clientX+Math.cos(a*Math.PI/180)*d)+'px';
-    el.style.top=(e.clientY+Math.sin(a*Math.PI/180)*d)+'px';
-    el.style.fontSize=(.8+Math.random()*.7)+'rem';
-    el.style.animationDuration='.95s';
-    document.body.appendChild(el);setTimeout(()=>el.remove(),960);
+  for(let i=0;i<5;i++){
+    const d=document.createElement('div');d.className='trail';
+    const a=Math.random()*360,dist=20+Math.random()*50;
+    d.style.left=(e.clientX+Math.cos(a*Math.PI/180)*dist)+'px';
+    d.style.top=(e.clientY+Math.sin(a*Math.PI/180)*dist)+'px';
+    d.style.width=d.style.height=(2+Math.random()*4)+'px';
+    d.style.animationDuration='.8s';
+    document.body.appendChild(d);setTimeout(()=>d.remove(),800);
   }
 });
 
-// ── Particle canvas
-const canvas=document.getElementById('bgCanvas');
-const ctx=canvas.getContext('2d');
-let W,H,parts=[];
-function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
-resize();window.addEventListener('resize',resize);
-const pColors=['#f9c6d5','#a8c5a0','#d4b8e0','#dba87a','#f2a7bc','#fce8ef'];
-function mkPart(){return{x:Math.random()*W,y:H+20,r:1.5+Math.random()*4,vx:(Math.random()-.5)*.55,vy:-(0.35+Math.random()*.75),color:pColors[Math.floor(Math.random()*pColors.length)],life:0,maxLife:160+Math.random()*130}}
-for(let i=0;i<65;i++){const p=mkPart();p.y=Math.random()*H;p.life=Math.random()*p.maxLife;parts.push(p)}
-function drawParts(){
-  ctx.clearRect(0,0,W,H);
-  parts.forEach(p=>{
-    p.life++;p.x+=p.vx;p.y+=p.vy;
-    const t=p.life/p.maxLife;
-    const a=t<.1?t/.1:t>.8?(1-t)/.2:1;
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.color;ctx.globalAlpha=a*.38;ctx.fill();
-    if(p.life>=p.maxLife)Object.assign(p,mkPart());
-  });
-  ctx.globalAlpha=1;requestAnimationFrame(drawParts);
+// ── sprocket holes
+['sp-l','sp-r'].forEach(id=>{
+  const el=document.getElementById(id);
+  for(let i=0;i<14;i++){const h=document.createElement('div');h.className='hole';el.appendChild(h)}
+});
+
+// ── floating dust
+for(let i=0;i<28;i++){
+  const d=document.createElement('div');d.className='dust';
+  d.style.left=Math.random()*100+'vw';
+  d.style.top=Math.random()*100+'vh';
+  d.style.setProperty('--dx',(Math.random()*60-30)+'px');
+  d.style.width=d.style.height=(1+Math.random()*2)+'px';
+  d.style.animationDuration=(6+Math.random()*14)+'s';
+  d.style.animationDelay=(Math.random()*14)+'s';
+  d.style.opacity='0';
+  document.body.appendChild(d);
 }
-drawParts();
 
-// ── Floating words
-const words=['love','always','yours','forever','beautiful','adore','heart','soft','warm','joy','smile','darling','sweet','tender','bloom','cherish','gentle','dear','glow','bliss','mine','lucky','grateful'];
-const floatyEl=document.getElementById('floaty');
-words.forEach(w=>{
-  const el=document.createElement('div');el.className='floaty-word';el.textContent=w;
-  el.style.setProperty('--rot',(Math.random()*30-15)+'deg');
-  el.style.left=(Math.random()*100)+'%';el.style.bottom='-5%';
-  el.style.fontSize=(.75+Math.random()*1.1)+'rem';
-  el.style.animationDuration=(9+Math.random()*14)+'s';
-  el.style.animationDelay=(Math.random()*14)+'s';
-  floatyEl.appendChild(el);
-});
-
-// ── Reasons
-const reasons=[
-  {emoji:'☀️',title:'Your smile',body:'It is the kind of smile that makes strangers feel welcome and makes me feel like the luckiest person in every room you walk into.'},
-  {emoji:'🧠',title:'Your brilliant mind',body:'You are endlessly curious and I love it. Every single conversation with you teaches me something — even about things I thought I already understood.'},
-  {emoji:'🤝',title:'How safe you make me feel',body:'I can say anything to you. That level of trust does not come easily, and you made it feel completely effortless from the very beginning.'},
-  {emoji:'😂',title:'The way you laugh',body:'Especially when something catches you completely off guard. You cannot fake that one, and it is honestly my favourite sound in the entire world.'},
-  {emoji:'🌿',title:'Your quiet kindness',body:'You are kind in the uncelebrated, automatic ways — to strangers, to animals, to people who cannot give anything back. That is the rarest, most beautiful thing.'},
-  {emoji:'🌙',title:'Late nights with you',body:'Time moves differently when we are just talking. I look up and it is 2am and somehow I would not trade a single minute of it for anything else.'},
-  {emoji:'💪',title:'Your resilience',body:'You carry heavy things without complaint, keep going when it is genuinely hard, and somehow manage to do it all without making anyone else feel like a burden.'},
-  {emoji:'🌺',title:'The way you pay attention',body:'You remember small things — what people said weeks ago, what someone needed, what matters to whom. That kind of attention is a love language all on its own.'},
-  {emoji:'🦋',title:'How you make me grow',body:'You push me to be more thoughtful, more present, more honest with myself — not with pressure, but simply by being exactly who you are around me.'},
-  {emoji:'✨',title:'Everything I cannot put into words',body:'There is a feeling I get when I am with you that no list, no poem, no website will ever fully capture. But I wanted to try anyway. You deserve the attempt.'},
+// ── polaroid cards
+const cards=[
+  {emoji:'🌬️',n:'01',cap:'The way she smells',body:'Not any perfume. Just her — something warm and specific that I could find in a crowd with my eyes closed. It is the most comforting thing I know.'},
+  {emoji:'✨',n:'02',cap:'Her eyes when she smiles',body:'They go first. A half-second before the rest of her face. I have started watching for it every time and I still catch my breath a little.'},
+  {emoji:'🫂',n:'03',cap:'How she makes me feel understood',body:'She actually listens. Not waiting to talk — properly listening. I have never felt more seen by anyone in my entire life.'},
+  {emoji:'🔖',n:'04',cap:'Her little nicknames for me',body:'She says them casually, like they cost nothing. They rearranged something in my chest the first time and they still do.'},
+  {emoji:'🍜',n:'05',cap:'The way she eats food she loves',body:'Fully present, no performance, pure honest joy. It is one of the most genuinely beautiful things I have ever watched happen.'},
 ];
-const grid=document.getElementById('reasons-grid');
-reasons.forEach((r,i)=>{
-  const card=document.createElement('div');
-  card.className='r-card reveal';card.style.transitionDelay=(i*.07)+'s';
-  card.innerHTML=`<div class="r-num">0${i<9?i+1:i+1}</div><span class="r-emoji">${r.emoji}</span><div class="r-title">${r.title}</div><p class="r-body">${r.body}</p>`;
-  grid.appendChild(card);
+const grid=document.getElementById('pol-grid');
+cards.forEach((c,i)=>{
+  const el=document.createElement('div');
+  el.className='pol-card reveal';el.style.transitionDelay=(i*.1)+'s';
+  el.innerHTML=`
+    <div class="pol-tape"></div>
+    <div class="pol-photo"><div class="pol-num">${c.n}</div></div>
+    <span class="pol-emoji">${c.emoji}</span>
+    <div class="pol-caption">${c.cap}</div>
+    <p class="pol-body">${c.body}</p>`;
+  grid.appendChild(el);
 });
 
-// ── Typewriter
-const quotes=[
-  '"You make ordinary life feel extraordinary."',
-  '"I choose you. Over and over, without pause, without doubt."',
-  '"Being loved by you is the best thing that has ever happened to me."',
-  '"You are my favourite hello and my hardest goodbye."',
-  '"With you, everything is exactly where it should be."',
-  '"You turned the world into a warmer, softer, better place."',
+// ── typewriter
+const lines=[
+  '"She does not try to be unforgettable. She just is."',
+  '"I find her in every song I love."',
+  '"She is the reason the word home means something to me."',
+  '"The world is softer because she exists in it."',
+  '"I would rewind to the moment I met her every single time."',
 ];
 let qi=0,ci=0,del=false,pause=0;
-const twOut=document.getElementById('tw-output');
-function typeStep(){
-  if(pause>0){pause--;setTimeout(typeStep,55);return}
-  const q=quotes[qi];
-  if(!del){
-    ci++;twOut.innerHTML=q.slice(0,ci)+'<span class="tw-cursor"></span>';
-    if(ci>=q.length){del=true;pause=70;setTimeout(typeStep,55);return}
-    setTimeout(typeStep,48);
-  }else{
-    ci--;twOut.innerHTML=q.slice(0,ci)+'<span class="tw-cursor"></span>';
-    if(ci<=0){del=false;qi=(qi+1)%quotes.length;pause=25;setTimeout(typeStep,55);return}
-    setTimeout(typeStep,26);
+const out=document.getElementById('tw-out');
+function type(){
+  if(pause>0){pause--;setTimeout(type,55);return}
+  const q=lines[qi];
+  if(!del){ci++;out.innerHTML=q.slice(0,ci)+'<span class="tw-cur"></span>';
+    if(ci>=q.length){del=true;pause=80;setTimeout(type,55);return}
+    setTimeout(type,50);
+  }else{ci--;out.innerHTML=q.slice(0,ci)+'<span class="tw-cur"></span>';
+    if(ci<=0){del=false;qi=(qi+1)%lines.length;pause=30;setTimeout(type,55);return}
+    setTimeout(type,28);
   }
 }
-setTimeout(typeStep,1600);
+setTimeout(type,1200);
 
-// ── Scroll reveal
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
-},{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+// ── scroll reveal
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
